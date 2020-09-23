@@ -3,6 +3,7 @@ project('01_processes', 'cpp',
         version : '0.1',
         default_options : ['cpp_std=c++2a', 'warning_level=3', 'werror=true'])
 
+
 # thread_dep = dependency('threads')
 
 inc_dir = include_directories(['include',
@@ -16,12 +17,16 @@ inc_dir = include_directories(['include',
 
 src = ['src/aba.cpp']
 
-executable('aba',
-            sources : src,
+executables = ['aba', 'charout']
+
+foreach e : executables
+        executable(e,
+            sources : 'src/'+e+'.cpp',
             include_directories : inc_dir,
             #dependencies : XXX_dep,
             #link_with : XXX_lib
            )
+endforeach
 
 # doctest_dir = include_directories([get_option('doctest_include_dir')])
 
