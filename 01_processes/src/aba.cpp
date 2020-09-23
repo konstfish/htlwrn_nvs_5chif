@@ -36,7 +36,7 @@ using namespace std;
 
 int main() {
     auto pid1{fork()};
-    std::chrono::milliseconds sleeptime(500);
+    std::chrono::milliseconds sleeptime(3000);
 
     const char* aba_letter_a{getenv("ABA_LETTER_A")}; 
     const char* aba_letter_b{getenv("ABA_LETTER_B")};
@@ -55,104 +55,42 @@ int main() {
 
     if (pid1 == 0) {
         // child1
-        int status = execl("./charout", "charout", aba_letter_a, nullptr);
+        int status = execl("./charouta", "charout", aba_letter_a, nullptr);
         if(status == -1) {
-            cerr << strerror(errno) << endl;
+            cerr << "starting charout failed: " << strerror(errno) << endl;
         }
     } else {
         auto pid2{fork()};
 
         if(pid2 == 0) {
             // child2
-            int status = execl("./charout", "charout", aba_letter_b, nullptr);
+            int status = execl("./charouta", "charout", aba_letter_b, nullptr);
             if(status == -1) {
-                cerr << strerror(errno) << endl;
+                cerr << "starting charout failed: " << strerror(errno) << endl;
             }
         } else {
-            cout << "Child1: " << pid1 << endl;
-            cout << "Child2: " << pid2 << endl;
-            int iterations = 0;
-            while (true) {
-                iterations += 1;
-                this_thread::sleep_for(sleeptime);
-                if(iterations == 6){
-                    kill(pid1, SIGKILL);
-                    kill(pid2, SIGKILL);
-                    int status1;
-                    waitpid(pid1, &status1, 0);
-                    int status2;
-                    waitpid(pid2, &status2, 0);
-                    cout << endl << "Status1: " << status1;
-                    cout << endl << "Status2: " << status2 << endl;
-                    exit(0);
-                }
-            }
-        }
-    }
-
-    cout << "Terminated" << endl;
-    return 0;
-
-/*
-    if(pid1) {
-        // parent
-        if(pid2) {
-            // parent
-            cout << "Child1: " << pid1 << endl;
-            cout << "Child2: " << pid2 << endl;
-            int iterations = 0;
-            while (true) {
-                iterations += 1;
-                this_thread::sleep_for(sleeptime);
-                if(iterations == 6){
-                    kill(pid1, SIGKILL);
-                    int status;
-                    waitpid(pid1, &status, 0);
-                    cout << endl << "Status: " << status;
-                    exit(0);
-                }
-            }
-        }
-        else {
-            // child2
-            try{
-                execl("./charout", "charout", "A", nullptr);
-            }catch(...){
-                cerr << strerror(errno) << endl;
-            }
-        }
-    } else {
-        // child 2
-        try{
-            execl("./charout", "charout", "B", nullptr);
-        }catch(...){
-            cerr << strerror(errno) << endl;
-        }
-    }
-
-    if (pid1 == 0) {
-        // child
-        try{
-            execl("./charoutdf", "charout", "A", nullptr);
-        }catch(...){
-            cerr << strerror(errno) << endl;
-        }
-    } else {
-        // parent
-        int iterations = 0;
-        cout << "Child: " << pid1 << endl;
-
-        while (true) {
-            iterations += 1;
+            //cout << "Child1: " << pid1 << endl;
+            //cout << "Child2: " << pid2 << endl;
+            cout << "waiting for 3 seconds" << endl;
             this_thread::sleep_for(sleeptime);
-            if(iterations == 6){
-                kill(pid1, SIGKILL);
-                int status;
-                waitpid(pid1, &status, 0);
-                cout << endl << "Status: " << status;
-                exit(0);
+
+            cout << endl << "killing both subprocesses with pids " << pid1 << " and " << pid2 << endl;
+
+            kill(pid1, SIGKILL);
+            kill(pid2, SIGKILL);
+            cout << "waiting for both subprocesses to be dead" << endl;
+
+            int status1;
+            waitpid(pid1, &status1, 0);
+            int status2;
+            waitpid(pid2, &status2, 0);
+
+            cout << "subprocess " << pid1 << " exited with " << status1 << endl;
+            cout << "subprocess " << pid2 << " exited with " << status2 << endl;
+            
+            exit(0);    
             }
         }
-    }
-*/
+
+    return 0;
 }
