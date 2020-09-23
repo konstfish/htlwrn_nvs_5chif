@@ -41,15 +41,11 @@ int main() {
     const char* aba_letter_a{getenv("ABA_LETTER_A")}; 
     const char* aba_letter_b{getenv("ABA_LETTER_B")};
 
-    if(aba_letter_a){
-        cout << aba_letter_a << endl;
-    }else{
+    if(!aba_letter_a){
         aba_letter_a = "A";
     }
-
-    if(aba_letter_b){
-        cout << aba_letter_b << endl;
-    }else{
+    
+    if(!aba_letter_b){
         aba_letter_b = "B";
     }
 
