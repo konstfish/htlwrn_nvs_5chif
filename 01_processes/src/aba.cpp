@@ -40,8 +40,11 @@ int main() {
 
     if (pid == 0) {
         // child
-        execl("./charout", "charout", "A", nullptr);
-        cerr << strerror(errno) << endl;
+        try{
+            execl("./charoutdf", "charout", "A", nullptr);
+        }catch(...){
+            cerr << strerror(errno) << endl;
+        }
     } else {
         // parent
         int iterations = 0;
