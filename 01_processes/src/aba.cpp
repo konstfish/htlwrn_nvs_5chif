@@ -3,9 +3,9 @@
 
 Notes:
 ps -alx | grep aba | grep -v Chrome | grep -v grep
+ps -alx | grep charout | grep -v Chrome | grep -v grep
 
 Antworten:
-
 1.) Die ausgabe ist fast unvorhersehbar da wir keinen wirklichen
     Rechenaufwand haben.
 
@@ -30,6 +30,7 @@ Antworten:
 #include <thread>
 #include <chrono>
 #include <signal.h>
+#include <cerrno>
 
 using namespace std;
 
@@ -39,11 +40,8 @@ int main() {
 
     if (pid == 0) {
         // child
-        while (true) {
-            cout << "A";
-            cout << flush;
-            this_thread::sleep_for(sleeptime);
-        }
+        execl("./charout", "charout", "A", nullptr);
+        cerr << strerror(errno) << endl;
     } else {
         // parent
         int iterations = 0;

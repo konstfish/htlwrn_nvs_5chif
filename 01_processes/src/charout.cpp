@@ -11,7 +11,9 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    cout << argc << endl;
+    // Bin mir nicht sicher wie ich den error sonst in Meson
+    // wegbekomme
+    argc += 0;
     std::chrono::milliseconds sleeptime(500);
 
     while (true) {
