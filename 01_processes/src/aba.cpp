@@ -55,7 +55,7 @@ int main() {
 
     if (pid1 == 0) {
         // child1
-        int status = execl("./charouta", "charout", aba_letter_a, nullptr);
+        int status = execl("./charout", "charout", aba_letter_a, nullptr);
         if(status == -1) {
             cerr << "starting charout failed: " << strerror(errno) << endl;
         }
@@ -64,7 +64,7 @@ int main() {
 
         if(pid2 == 0) {
             // child2
-            int status = execl("./charouta", "charout", aba_letter_b, nullptr);
+            int status = execl("./charout", "charout", aba_letter_b, nullptr);
             if(status == -1) {
                 cerr << "starting charout failed: " << strerror(errno) << endl;
             }
