@@ -6,11 +6,12 @@
 
 using namespace std;
 
-void mini_jcw();
+void mini_jcw(double& total_time);
 
 class Car{
     public:
     string name;
+    double total_time{0};
 
     Car(string n){
         name = n;
@@ -22,43 +23,73 @@ class Car{
         ostringstream buf;
 
         random_device rd;
+        std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{1, 10};
+        double seconds;
 
-
-        while (true) {
-            std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{1, 10};
-            this_thread::sleep_for(chrono::milliseconds{(int)(dis(gen) * 1000)});
+        while (round < 10) {
+            seconds = dis(gen);
+            this_thread::sleep_for(chrono::milliseconds{(int)(seconds * 1000)});
             round += 1;
+            total_time += seconds;
 
             // tmp = to_string(round) + " " + name + " " + to_string(dis(gen)) + "s\n";
 
             buf << setprecision(3);
-            buf << round << " " << name << " " << dis(gen) << "s\n";
+            buf << round << " " << name << " " << seconds << "s\n";
             tmp = buf.str();
             buf.str("");
 
             cout << tmp;
         }
+        cout << total_time << endl;
+    }
+
+    double get_total_time(){
+        return total_time;
     }
 };
 
 int main() {
 
     Car c1("MINI Cooper S");
-    Car c2("MINI JCW");
+    //Car c2("MINI JCW");
 
     thread t1{c1};
-    thread t2{c2};
+
+    double total_time{0};
+    thread t2{mini_jcw, ref(total_time)};
     
     t1.join();
     t2.join();
+
+    cout << "MINI Cooper S: " << c1.get_total_time() << "s" << endl;
+    cout << "MINI JCW: " << total_time << "s" << endl;
     //thread t2{c2};
 }
 
-void mini_jcw(){
+// wusste bis zu diesem commit nicht dass wir diese funktion weiterführen müssen, ups!
+void mini_jcw(double& total_time){
     int round = 0;
-    while (true) {
-        this_thread::sleep_for(1s);
+    string tmp;
+    ostringstream buf;
+
+    random_device rd;
+    std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{1, 10};
+    double seconds;
+
+    while (round < 10) {
+        seconds = dis(gen);
+        this_thread::sleep_for(chrono::milliseconds{(int)(seconds * 1000)});
         round += 1;
-        cout << round << " MINI F56 JCW" << endl;     
+        total_time += seconds;
+
+        // tmp = to_string(round) + " " + name + " " + to_string(dis(gen)) + "s\n";
+
+        buf << setprecision(3);
+        buf << round << " " << "MINI JCW" << " " << seconds << "s\n";
+        tmp = buf.str();
+        buf.str("");
+
+        cout << tmp;
     }
 }
