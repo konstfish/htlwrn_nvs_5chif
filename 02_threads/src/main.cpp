@@ -2,6 +2,7 @@
 #include <thread>
 #include <random>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -18,7 +19,7 @@ class Car{
     void operator()(){
         int round = 0;
         string tmp;
-        string round_delay;
+        ostringstream buf;
 
         random_device rd;
 
@@ -27,15 +28,20 @@ class Car{
             std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{1, 10};
             this_thread::sleep_for(chrono::milliseconds{(int)(dis(gen) * 1000)});
             round += 1;
-            tmp = to_string(round) + " " + name + " " + to_string(dis(gen)) + "s\n";
+
+            // tmp = to_string(round) + " " + name + " " + to_string(dis(gen)) + "s\n";
+
+            buf << setprecision(3);
+            buf << round << " " << name << " " << dis(gen) << "s\n";
+            tmp = buf.str();
+            buf.str("");
+
             cout << tmp;
         }
     }
 };
 
 int main() {
-    cout << setprecision(3);
-    cout << 3.231 << endl;
 
     Car c1("MINI Cooper S");
     Car c2("MINI JCW");
