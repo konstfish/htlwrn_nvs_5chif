@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <random>
+#include <iomanip>
 
 using namespace std;
 
@@ -17,17 +18,25 @@ class Car{
     void operator()(){
         int round = 0;
         string tmp;
+        string round_delay;
+
+        random_device rd;
+
+
         while (true) {
-            //dis(gen)
-            this_thread::sleep_for(1s);
+            std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{1, 10};
+            this_thread::sleep_for(chrono::milliseconds{(int)(dis(gen) * 1000)});
             round += 1;
-            tmp = to_string(round) + " " + name + "\n";
-            cout << tmp;     
+            tmp = to_string(round) + " " + name + " " + to_string(dis(gen)) + "s\n";
+            cout << tmp;
         }
     }
 };
 
 int main() {
+    cout << setprecision(3);
+    cout << 3.231 << endl;
+
     Car c1("MINI Cooper S");
     Car c2("MINI JCW");
 
