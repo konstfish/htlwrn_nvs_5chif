@@ -37,7 +37,7 @@ class Depositer{
             }
         }else{
             while ( i > deposits ){
-                acc.deposit(1);
+                acc.withdraw(1);
                 i -= 1;
             }
         }
