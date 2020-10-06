@@ -39,5 +39,5 @@ int main() {
    t1.join();
    t2.join();
 
-   cout << a1.get_balance() << endl;
+   cout << "Bal: " << a1.get_balance() << endl;
 }
