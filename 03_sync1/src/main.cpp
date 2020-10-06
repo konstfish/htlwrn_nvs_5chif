@@ -1,5 +1,4 @@
 #include "account.h"
-#include <thread>
 
 using namespace std;
 
@@ -19,6 +18,10 @@ int main() {
    // Punkt 2
    // Ergebnis ist wie Erwartet, einer der Threads "gewinnt" 
    // und bucht den Euro zuerst ab
+
+   // Punkt 4
+   // Beide Threads können die Abfrage starten & da sie bei Beiden True ist,
+   // Buchen beide ab. Das Resultiert in einem Kontostand von -1 
    Account a1;
    a1.deposit(1);
 
@@ -35,4 +38,6 @@ int main() {
 
    t1.join();
    t2.join();
+
+   cout << a1.get_balance() << endl;
 }

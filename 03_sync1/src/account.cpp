@@ -1,5 +1,7 @@
 #include "account.h"
 
+using namespace std;
+
 Account::Account(){
     balance = 0;
 }
@@ -18,6 +20,7 @@ void Account::deposit(int amount){
 
 bool Account::withdraw(int amount){
     if( (balance - amount) >= 0 ){
+        this_thread::yield();
         balance -= amount;
         return true;
     }else{
