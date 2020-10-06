@@ -9,6 +9,7 @@ using namespace std;
 void mini_jcw(double& total_time, int rounds);
 void help();
 void error(string msg="");
+
 class Car{
     public:
     string name;
