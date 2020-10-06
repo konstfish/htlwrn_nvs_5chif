@@ -1,17 +1,47 @@
 #include "account.h"
+#include "CLI11.hpp"
 
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
+    CLI::App app("Account app");
+
+    int balance{0};
+    int deposits{5};
+
+    app.add_option("balance", balance, "Initial balance")->required();
+    app.add_option("-d,--deposits", deposits, "Count of deposits", true);
+    
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) { 
+        return app.exit(e);
+    }
+
+    Account a1;
+    a1.deposit(balance);
+
+    Depositer d1(ref(a1), deposits);
+    Depositer d2(ref(a1), deposits);
+
+    thread t1{ref(d1)};
+    thread t2{ref(d2)};
+
+    t1.join();
+    t2.join();
+
+    std::this_thread::sleep_for(500ms);
+    cout << a1.get_balance() << endl;
 
     // Punkt 6
     // Kein Großer unterschied, bis auf deklarieren der Funktionen
     // Innerhalb von account.cpp (Klasse::funktion), innerhalb header
     // ganz normal
+    /*
     Account a1;
 
-    Depositer d1(ref(a1));
-    Depositer d2(ref(a1));
+    Depositer d1(ref(a1), 10);
+    Depositer d2(ref(a1), 10);
 
     thread t1{ref(d1)};
     thread t2{ref(d2)};
@@ -21,6 +51,7 @@ int main() {
 
     std::this_thread::sleep_for(300ms);
     cout << a1.get_balance() << endl;
+    */
 
     // Punkt 1
     /*

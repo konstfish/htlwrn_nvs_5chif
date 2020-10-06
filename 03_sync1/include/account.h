@@ -23,15 +23,23 @@ class Account{
 class Depositer{
     private:
     Account &acc;
+    int deposits;
 
     public:
-    Depositer(Account &a):acc(a){};
+    Depositer(Account &a, int dep):acc(a), deposits(dep){};
 
     void operator()(){
         int i = 0;
-        while ( i < 5 ){
-            acc.deposit(1);
-            i += 1;
+        if(deposits > 0){
+            while ( i < deposits ){
+                acc.deposit(1);
+                i += 1;
+            }
+        }else{
+            while ( i > deposits ){
+                acc.deposit(1);
+                i -= 1;
+            }
         }
     }
 };
