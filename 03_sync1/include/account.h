@@ -33,7 +33,6 @@ class Depositer{
             acc.deposit(1);
             i += 1;
         }
-        std::cout << acc.get_balance() << std::endl;
     }
 };
 

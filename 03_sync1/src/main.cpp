@@ -4,6 +4,10 @@ using namespace std;
 
 int main() {
 
+    // Punkt 6
+    // Kein Großer unterschied, bis auf deklarieren der Funktionen
+    // Innerhalb von account.cpp (Klasse::funktion), innerhalb header
+    // ganz normal
     Account a1;
 
     Depositer d1(ref(a1));
@@ -14,6 +18,9 @@ int main() {
 
     t1.join();
     t2.join();
+
+    std::this_thread::sleep_for(300ms);
+    cout << a1.get_balance() << endl;
 
     // Punkt 1
     /*
