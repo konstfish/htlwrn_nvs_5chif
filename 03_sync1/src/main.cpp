@@ -4,6 +4,17 @@ using namespace std;
 
 int main() {
 
+    Account a1;
+
+    Depositer d1(ref(a1));
+    Depositer d2(ref(a1));
+
+    thread t1{ref(d1)};
+    thread t2{ref(d2)};
+
+    t1.join();
+    t2.join();
+
     // Punkt 1
     /*
     Account a1;
@@ -22,6 +33,8 @@ int main() {
    // Punkt 4
    // Beide Threads können die Abfrage starten & da sie bei Beiden True ist,
    // Buchen beide ab. Das Resultiert in einem Kontostand von -1 
+   
+   /*
    Account a1;
    a1.deposit(1);
 
@@ -40,4 +53,5 @@ int main() {
    t2.join();
 
    cout << "Bal: " << a1.get_balance() << endl;
+   */
 }
