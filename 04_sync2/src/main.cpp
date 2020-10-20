@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "work_queue.h"
+#include "CLI11.hpp"
 
 using namespace std;
 
@@ -15,8 +16,20 @@ void worker(int id, WorkQueue& q);
 gute hilfe beim debuggen
 */
 
-int main() {
-    WorkQueue wq;
+int main(int argc, char** argv) {
+    CLI::App app("Account app");
+
+    size_t capacity{10};
+
+    app.add_option("size", capacity, "Size of the queue")->required();
+    
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) { 
+        return app.exit(e);
+    }
+
+    WorkQueue wq(capacity);
 
     int cnt{1};
 
@@ -28,17 +41,27 @@ int main() {
     std::mt19937 gen{rd()}; std::uniform_real_distribution<> dis{0, 1};
     double seconds;
 
-    cout << setprecision(2);
+    ostringstream buf;
+    string tmpstr;
 
     while(true){
-        cout << "B: Waiting to submit work packet" << cnt << endl;
+
+        buf << "B : Waiting to submit work packet " << cnt << endl;
+        tmpstr = buf.str();
+        buf.str("");
+        cout << tmpstr;
 
         seconds = dis(gen);
         this_thread::sleep_for(chrono::milliseconds{(int)(seconds * 1000)});
 
         WorkPacket tmp(cnt);
         wq.push(tmp);
-        cout << "B: Submitted work packet " << tmp.getId() << " (" << seconds << "s)" << endl;
+
+        buf << setprecision(2);
+        buf << "B : Submitted work packet " << tmp.getId() << " (" << seconds << "s)" << endl;
+        tmpstr = buf.str();
+        buf.str("");
+        cout << tmpstr;
         cnt += 1;
     }
 
