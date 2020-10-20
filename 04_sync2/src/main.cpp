@@ -1,24 +1,22 @@
 #include <iostream>
+#include <thread>
+
 #include "work_queue.h"
 
 using namespace std;
 
 int main() {
-    WorkPacket p(1);
-    WorkPacket p2(2);
-    WorkPacket p3(3);
+    WorkQueue wq;
 
-    // cout << p.getId() << endl;
+    int cnt{1};
 
-    WorkQueue wq1;
-    wq1.push(p3);
-    wq1.push(p);
-    wq1.push(p2);
-    cout << wq1.pop().getId() << endl;
-    cout << wq1.pop().getId() << endl;
-    cout << wq1.pop().getId() << endl;
-    cout << wq1.pop().getId() << endl;
-    cout << wq1.pop().getId() << endl;
+    while(true){
+        this_thread::sleep_for(chrono::milliseconds{500});
+        WorkPacket tmp(cnt);
+        wq.push(tmp);
+        cout << "B: Submitted work packet " << tmp.getId() << endl;
+        cnt += 1;
+    }
 
     return 0;
 }
