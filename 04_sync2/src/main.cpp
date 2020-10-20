@@ -17,7 +17,7 @@ gute hilfe beim debuggen
 */
 
 int main(int argc, char** argv) {
-    CLI::App app("Account app");
+    CLI::App app("Boss and worker simulation");
 
     size_t capacity{10};
 
