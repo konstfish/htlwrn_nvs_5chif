@@ -13,5 +13,6 @@ WorkPacket WorkQueue::pop(){
         q.pop();
         return temp;
     }
-    return NULL;
+    WorkPacket temp{-1};
+    return temp;
 }
