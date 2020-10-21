@@ -83,26 +83,23 @@ void worker(int id, WorkQueue& q){
     while(true){
         WorkPacket tmp = q.pop();
 
-        if(tmp.getId() == -1){
-            buf << "W" << id << ": Want work packet\n";
-            tmpstr = buf.str();
-            buf.str("");
-            cout << tmpstr;
-            this_thread::sleep_for(chrono::milliseconds{500});
-        }else{
-            buf << "W" << id << ": Got work packet " << tmp.getId() << "\n";
-            tmpstr = buf.str();
-            buf.str("");
-            cout << tmpstr;
+        buf << "W" << id << ": Want work packet\n";
+        tmpstr = buf.str();
+        buf.str("");
+        cout << tmpstr;
 
-            seconds = dis(gen);
-            this_thread::sleep_for(chrono::milliseconds{(int)(seconds * 1000)});
+        buf << "W" << id << ": Got work packet " << tmp.getId() << "\n";
+        tmpstr = buf.str();
+        buf.str("");
+        cout << tmpstr;
 
-            buf << setprecision(2);
-            buf << "W" << id << ": Processed work packet " << tmp.getId() << " (" << seconds << "s)" << "\n";
-            tmpstr = buf.str();
-            buf.str("");
-            cout << tmpstr;
-        }
+        seconds = dis(gen);
+        this_thread::sleep_for(chrono::milliseconds{(int)(seconds * 1000)});
+
+        buf << setprecision(2);
+        buf << "W" << id << ": Processed work packet " << tmp.getId() << " (" << seconds << "s)" << "\n";
+        tmpstr = buf.str();
+        buf.str("");
+        cout << tmpstr;
     }
 }
