@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install meson
-        run: sudo apt-get install python3 python3-pip python3-setuptools python3-wheel build-essential g++-8 meson ninja-build && pip3 install --user meson
+        run: sudo apt-get install python3 python3-pip python3-setuptools python3-wheel build-essential g++-8 gcc-8 meson ninja-build && pip3 install --user meson
 
       - uses: actions/checkout@v2
       - name: Build
