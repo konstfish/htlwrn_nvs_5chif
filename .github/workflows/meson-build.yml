@@ -11,9 +11,9 @@ jobs:
 
     steps:
       - name: Install meson
-        run: sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && pip3 install meson
+        run: sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && pip3 install --user meson
 
-      - uses: actions/checkout@v2
       - name: Build
+      - uses: actions/checkout@v2
         run: |
           for d in ./*/ ; do (cd "$d" && mkdir -p build && mkdir -p include && cd build && meson .. && pwd); done
