@@ -24,6 +24,8 @@ void Philosopher::operator()(){
         println("Philosopher", to_string(id), "attempts to get left fork");
         linke_gabel.lock();
 
+        this_thread::sleep_for(5s); // deadlock!
+
         println("Philosopher", to_string(id), "got left fork. Now he wants the right one...");
         rechte_gabel.lock();
 
