@@ -21,4 +21,4 @@ class Philosopher{
     void operator()();
 };
 
-void println(const std::vector<std::string> &output);
+void println(const std::initializer_list<std::string> &output);

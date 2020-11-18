@@ -30,9 +30,9 @@ void Philosopher::operator()(){
     }
 }
 
-void println(const std::vector<std::string> &output){
+void println(const std::initializer_list<std::string> &output){
     lock_guard<mutex> lg{out_mtx};
-    for(size_t i = 0; i < output.size(); i++){
-        cout << output.at(i);
+    for(string i : output){
+        cout << i;
     }
 }
