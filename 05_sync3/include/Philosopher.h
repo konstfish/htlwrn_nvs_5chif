@@ -3,7 +3,6 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include <sstream>
 #include <vector>
 
 class Philosopher{
@@ -20,5 +19,3 @@ class Philosopher{
 
     void operator()();
 };
-
-void println(const std::initializer_list<std::string> &output);
