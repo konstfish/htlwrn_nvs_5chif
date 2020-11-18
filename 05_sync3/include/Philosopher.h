@@ -3,7 +3,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-
+#include <sstream>
 class Philosopher{
     private:
     int id{-1};

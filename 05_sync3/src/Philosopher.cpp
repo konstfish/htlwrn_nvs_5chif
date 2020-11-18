@@ -3,26 +3,44 @@
 using namespace std;
 
 void Philosopher::operator()(){
+    ostringstream buf;
+
     while(true){
-        cout << "Philosopher " << id << " is thinking..." << endl;
+
+        buf << "Philosopher " << id << " is thinking..." << endl;
+        cout << buf.str();
+        buf.str("");
+
         this_thread::sleep_for(1s);
 
-        cout << "Philosopher " << id << " attempts to get left fork" << endl;
+        buf << "Philosopher " << id << " attempts to get left fork" << endl;
+        cout << buf.str();
+        buf.str("");
         linke_gabel.lock();
 
-        cout << "Philosopher " << id <<  " got left fork. Now he wants the right one..." << endl;
-
+        buf << "Philosopher " << id <<  " got left fork. Now he wants the right one..." << endl;
+        cout << buf.str();
+        buf.str("");
         rechte_gabel.lock();
 
-        cout << "Philosopher " << id <<  " got right fork. Now he is eating..." << endl;
+        buf << "Philosopher " << id <<  " got right fork. Now he is eating..." << endl;
+        cout << buf.str();
+        buf.str("");
+
         this_thread::sleep_for(2s);
 
-        cout << "Philosopher" << id << " finished eating" << endl;
+        buf << "Philosopher" << id << " finished eating" << endl;
+        cout << buf.str();
+        buf.str("");
 
         linke_gabel.unlock();
-        cout << "Philosopher " << id <<  " released left fork" << endl;
+        buf << "Philosopher " << id <<  " released left fork" << endl;
+        cout << buf.str();
+        buf.str("");
 
         rechte_gabel.unlock();
-        cout << "Philosopher " << id <<  " released right fork" << endl;
+        buf << "Philosopher " << id <<  " released right fork" << endl;
+        cout << buf.str();
+        buf.str("");
     }
 }
