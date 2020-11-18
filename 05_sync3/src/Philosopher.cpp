@@ -18,14 +18,20 @@ void println(const T& word, const Rest&... rest) {
 }
 
 void Philosopher::operator()(){
+    livelock = 0; // placeholder
     while(true){
 
         println("Philosopher", to_string(id), "is thinking...");
         this_thread::sleep_for(1s);
 
         println("Philosopher", to_string(id), "attempts to get left fork");
-        println("Currently", to_string(sem.available_permits()), "left forks available");
-        sem.acquire();
+
+        if(deadlock_prevention){
+            if(sem.available_permits() <= 2){
+                println("Currently", to_string(sem.available_permits()), "left forks available");
+            }
+            sem.acquire();
+        }
         linke_gabel.lock();
 
         this_thread::sleep_for(5s); // deadlock!
@@ -38,7 +44,9 @@ void Philosopher::operator()(){
         println("Philosopher", to_string(id), "finished eating");
 
         linke_gabel.unlock();
-        sem.release();
+        if(deadlock_prevention){
+            sem.release();
+        }
         println("Philosopher", to_string(id), "released left fork");
 
         rechte_gabel.unlock();
