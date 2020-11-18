@@ -21,11 +21,11 @@ int main(int argc, char** argv) {
     }
 
 
-    mutex p1_p2;
-    mutex p2_p3;
-    mutex p3_p4;
-    mutex p4_p5;
-    mutex p5_p1;
+    timed_mutex p1_p2;
+    timed_mutex p2_p3;
+    timed_mutex p3_p4;
+    timed_mutex p4_p5;
+    timed_mutex p5_p1;
 
     Philosopher p1(1, ref(p1_p2), ref(p5_p1), deadlock_prevention, livelock);
     Philosopher p2(2, ref(p2_p3), ref(p1_p2), deadlock_prevention, livelock);
