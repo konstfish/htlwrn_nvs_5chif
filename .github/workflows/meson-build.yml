@@ -1,4 +1,4 @@
-name: Docker
+name: Meson Build
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Install meson
         run:  |
-          sudo apt-get install python3 python3-pip python3-setuptools python3-wheel build-essential g++-10 gcc-10 clang-10 meson ninja-build && pip3 install --user meson
+          sudo apt-get install meson ninja-build clang-10 gcc-10
       - uses: actions/checkout@v2
       - name: Build
         run: |
-          for d in ./*/ ; do (cd "$d" && mkdir -p build && pwd && mkdir -p include && cd build && meson .. && ninja); done
+          for d in ./*/ ; do (cd "$d" && mkdir -p build && pwd && mkdir -p include && cd build && meson ..; ninja || echo "Failed"); done
