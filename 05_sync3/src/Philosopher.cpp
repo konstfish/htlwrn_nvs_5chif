@@ -2,45 +2,37 @@
 
 using namespace std;
 
+std::mutex out_mtx;
+
 void Philosopher::operator()(){
     ostringstream buf;
 
     while(true){
 
-        buf << "Philosopher " << id << " is thinking..." << endl;
-        cout << buf.str();
-        buf.str("");
-
+        println({"Philosopher ", to_string(id), " is thinking...\n"});
         this_thread::sleep_for(1s);
 
-        buf << "Philosopher " << id << " attempts to get left fork" << endl;
-        cout << buf.str();
-        buf.str("");
+        println({"Philosopher ", to_string(id), " attempts to get left fork\n"});
         linke_gabel.lock();
 
-        buf << "Philosopher " << id <<  " got left fork. Now he wants the right one..." << endl;
-        cout << buf.str();
-        buf.str("");
+        println({"Philosopher ", to_string(id), " got left fork. Now he wants the right one...\n"});
         rechte_gabel.lock();
 
-        buf << "Philosopher " << id <<  " got right fork. Now he is eating..." << endl;
-        cout << buf.str();
-        buf.str("");
-
+        println({"Philosopher ", to_string(id), " got right fork. Now he is eating...\n"});
         this_thread::sleep_for(2s);
-
-        buf << "Philosopher" << id << " finished eating" << endl;
-        cout << buf.str();
-        buf.str("");
+        println({"Philosopher ", to_string(id), " finished eating\n"});
 
         linke_gabel.unlock();
-        buf << "Philosopher " << id <<  " released left fork" << endl;
-        cout << buf.str();
-        buf.str("");
+        println({"Philosopher ", to_string(id), " released left fork\n"});
 
         rechte_gabel.unlock();
-        buf << "Philosopher " << id <<  " released right fork" << endl;
-        cout << buf.str();
-        buf.str("");
+        println({"Philosopher ", to_string(id), " released right fork\n"});
+    }
+}
+
+void println(const std::vector<std::string> &output){
+    lock_guard<mutex> lg{out_mtx};
+    for(size_t i = 0; i < output.size(); i++){
+        cout << output.at(i);
     }
 }

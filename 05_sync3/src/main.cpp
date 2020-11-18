@@ -17,8 +17,6 @@ int main() {
     Philosopher p4(4, ref(p4_p5), ref(p3_p4));
     Philosopher p5(5, ref(p5_p1), ref(p4_p5));
 
-    //Car c2("MINI JCW");
-
     thread tp1{ref(p1)};
     thread tp2{ref(p2)};
     thread tp3{ref(p3)};

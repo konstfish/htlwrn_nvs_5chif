@@ -4,6 +4,8 @@
 #include <mutex>
 #include <thread>
 #include <sstream>
+#include <vector>
+
 class Philosopher{
     private:
     int id{-1};
@@ -18,3 +20,5 @@ class Philosopher{
 
     void operator()();
 };
+
+void println(const std::vector<std::string> &output);
