@@ -14,7 +14,7 @@ class Semaphore_c{
     std::condition_variable not_full;
 
     public:
-        Semaphore_c(){ cnt.store(0); }
+        Semaphore_c(){ cnt.store(4); }
 
         void acquire();
         void release();
