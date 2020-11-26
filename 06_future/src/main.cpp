@@ -18,7 +18,9 @@
 #pragma GCC diagnostic pop
 using namespace std;
 
-void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc);
+//std::__1::chrono::system_clock::time_point start;
+
+void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc, std::__1::chrono::system_clock::time_point start);
 void compare_factor(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc);
 
 int main(int argc, char** argv) {
@@ -41,7 +43,7 @@ int main(int argc, char** argv) {
         }
         );
 
-    app.add_option("-a, --async", io_async, "async");
+    app.add_flag("-a, --async", io_async, "async");
 
     try {
         app.parse(argc, argv);
@@ -61,12 +63,17 @@ int main(int argc, char** argv) {
     vector<shared_future<vector<InfInt>>> future_container;
 
     // fill future vector
+    auto start = chrono::system_clock::now();
     for(InfInt n : number_container){
-        future_container.push_back(async(get_factors, n));
+        if(!io_async){
+            future_container.push_back(async(get_factors, n));
+        }else{
+            future_container.push_back(async(launch::async, get_factors, n));
+        }
     }
 
     // call print function
-    thread t_output{print_factors, ref(number_container), ref(future_container)};
+    thread t_output{print_factors, ref(number_container), ref(future_container), start};
     t_output.join();
 
     thread t_check{compare_factor, ref(number_container), ref(future_container)};
@@ -74,13 +81,20 @@ int main(int argc, char** argv) {
     
     //print_factors(number_container, future_container);
 
+    /*
+    
+    Hintereinander Callen: Es wird immer schneller, bis er ein limit erreicht. Vermutlich
+    da die Werte noch im Speicher vorliegen (?)
+
+    */
+
     return 0;
 }
 
 // IN: &nc - number vector
 //     &fc - future vector
 // OUT: /
-void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc){
+void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc, std::__1::chrono::system_clock::time_point start){
     for(size_t cnt = 0; cnt < nc.size(); cnt++){
         cout << nc.at(cnt) << ": ";
         for(InfInt n : fc.at(cnt).get()){
@@ -88,8 +102,13 @@ void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc
         }
         cout << endl;
     }
+    auto duration = chrono::duration_cast<chrono::milliseconds> (std::chrono::system_clock::now() - start);
+    cout << "Time elapsed used for factoring: " << duration.count() << "ms" << endl;
 }
 
+// IN: &nc - number vector
+//     &fc - future vector
+// OUT: /
 void compare_factor(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc){
     InfInt tmp{0};
     for(size_t cnt = 0; cnt < nc.size(); cnt++){
