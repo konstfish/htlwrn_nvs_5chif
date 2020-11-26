@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <future>
+#include <thread>
 
 #include "CLI11.hpp"
 #include "calc_factors.h"
@@ -16,6 +17,9 @@
 #include "InfInt.h"
 #pragma GCC diagnostic pop
 using namespace std;
+
+void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc);
+void compare_factor(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc);
 
 int main(int argc, char** argv) {
     CLI::App app("Factor numbers");
@@ -53,38 +57,52 @@ int main(int argc, char** argv) {
         number_container.push_back(tmp);
     }
 
-    // output
+    // create future vector
+    vector<shared_future<vector<InfInt>>> future_container;
 
-    vector<future<vector<InfInt>>> future_container;
-
-    future<vector<InfInt>> futuret;
-
-
-
+    // fill future vector
     for(InfInt n : number_container){
-        
-        // vector<InfInt> asdf = get_factors(n);
-
         future_container.push_back(async(get_factors, n));
-
-
-        //for(InfInt fac : asdf){
-        //    cout << fac << " ";
-        //}
-
-        //futuret = get_factors(n);
-
-        //cout << endl;
     }
 
-    for(size_t cnt = 0; cnt < future_container.size(); cnt++){
-        cout << number_container.at(cnt) << ": ";
-        for(InfInt n : future_container.at(cnt).get()){
+    // call print function
+    thread t_output{print_factors, ref(number_container), ref(future_container)};
+    t_output.join();
+
+    thread t_check{compare_factor, ref(number_container), ref(future_container)};
+    t_check.join();
+    
+    //print_factors(number_container, future_container);
+
+    return 0;
+}
+
+// IN: &nc - number vector
+//     &fc - future vector
+// OUT: /
+void print_factors(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc){
+    for(size_t cnt = 0; cnt < nc.size(); cnt++){
+        cout << nc.at(cnt) << ": ";
+        for(InfInt n : fc.at(cnt).get()){
             cout << n << " ";
         }
         cout << endl;
     }
+}
 
-
-    return 0;
+void compare_factor(vector<InfInt> &nc, vector<shared_future<vector<InfInt>>> &fc){
+    InfInt tmp{0};
+    for(size_t cnt = 0; cnt < nc.size(); cnt++){
+        for(InfInt n : fc.at(cnt).get()){
+            if(tmp == 0){
+                tmp = n;
+            }else{
+                tmp *= n;
+            }
+        }
+        if(tmp != nc.at(cnt)){
+            cerr << "Fehler: Faktorielle nicht gleich ursprünglicher Nummer" << endl << nc.at(cnt) << " != " << tmp;
+        }
+        tmp = 0;
+    }
 }
