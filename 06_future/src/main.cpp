@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <future>
 
 #include "CLI11.hpp"
 #include "calc_factors.h"
@@ -54,14 +55,36 @@ int main(int argc, char** argv) {
 
     // output
 
-    for(InfInt n : number_container){
-        cout << n << ": ";
+    vector<future<vector<InfInt>>> future_container;
 
-        for(InfInt fac : get_factors(n)){
-            cout << fac << " ";
+    future<vector<InfInt>> futuret;
+
+
+
+    for(InfInt n : number_container){
+        
+        // vector<InfInt> asdf = get_factors(n);
+
+        future_container.push_back(async(get_factors, n));
+
+
+        //for(InfInt fac : asdf){
+        //    cout << fac << " ";
+        //}
+
+        //futuret = get_factors(n);
+
+        //cout << endl;
+    }
+
+    for(size_t cnt = 0; cnt < future_container.size(); cnt++){
+        cout << number_container.at(cnt) << ": ";
+        for(InfInt n : future_container.at(cnt).get()){
+            cout << n << " ";
         }
         cout << endl;
     }
+
 
     return 0;
 }
