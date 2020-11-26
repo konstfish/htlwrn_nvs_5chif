@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "CLI11.hpp"
+#include "calc_factors.h"
 
 //#define LONG_LONG_MAX LLONG_MAX;
 //#define LONG_LONG_MIN LLONG_MIN;
@@ -52,8 +53,14 @@ int main(int argc, char** argv) {
     }
 
     // output
+
     for(InfInt n : number_container){
-        cout << n << endl;
+        cout << n << ": ";
+
+        for(InfInt fac : get_factors(n)){
+            cout << fac << " ";
+        }
+        cout << endl;
     }
 
     return 0;
