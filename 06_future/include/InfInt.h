@@ -55,12 +55,10 @@
 
 //#include "Profiler.h"
 
-#ifdef _WIN32
 #define LONG_LONG_MIN LLONG_MIN
 #define LONG_LONG_MAX LLONG_MAX
 #define ULONG_LONG_MIN ULLONG_MIN
 #define ULONG_LONG_MAX ULLONG_MAX
-#endif
 
 //#define INFINT_USE_EXCEPTIONS
 //#define INFINT_USE_SHORT_BASE
@@ -1048,7 +1046,7 @@ inline void InfInt::truncateToBase()
         }
     }
 }
-
+/*
 inline bool InfInt::equalizeSigns()
 {//PROFILED_SCOPE
     bool isPositive = true;
@@ -1104,7 +1102,7 @@ inline bool InfInt::equalizeSigns()
     }
     
     return isPositive;
-}
+}*/
 
 inline void InfInt::removeLeadingZeros()
 {//PROFILED_SCOPE
