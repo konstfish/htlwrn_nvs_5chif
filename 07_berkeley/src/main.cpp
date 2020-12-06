@@ -43,6 +43,7 @@ class TimeSlave{
 
     TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency, int second_step):name( rn ){
         c = Clock(name, hours, minutes, seconds, second_step);
+        c.set_time_monoton(true);
 
         (*chan).set_latency(latency);
     };
@@ -87,6 +88,7 @@ class TimeMaster{
 
     TimeMaster(std::string rn, int hours, int minutes, int seconds, int second_step):name( rn ){
         c = Clock(name, hours, minutes, seconds, second_step);
+        c.set_time_monoton(true);
     };
 
     void operator()(){
@@ -130,7 +132,7 @@ class TimeMaster{
             s2_avg = m_avg - s2_diff;
 
 
-            buf << "Calculated Diffs:\nMaster: " << m_avg << "\nSlave1: " << s1_avg << "\nSlave2: " << s1_avg << endl; 
+            buf << "Calculated Diffs:\nMaster: " << m_avg << "\nSlave1: " << s1_avg << "\nSlave2: " << s2_avg << endl; 
             cout << buf.str();
             buf.str("");
 
@@ -166,7 +168,7 @@ class TimeMaster{
 int main() {
 
     TimeSlave slave1("slave1", 1, 2, 50, 1, 980);
-    TimeSlave slave2("slave2", 1, 3, 25, 2, 1200);
+    TimeSlave slave2("slave2", 1, 4, 25, 2, 1200);
 
     TimeMaster master1("master1", 1, 3, 0, 1000);
 

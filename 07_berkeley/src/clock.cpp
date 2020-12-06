@@ -11,7 +11,13 @@ void Clock::operator()(){
         buf.str("");
 
         curr_time += std::chrono::seconds(1);
-        this_thread::sleep_for(std::chrono::milliseconds(second_step));
+
+        this_thread::sleep_for(std::chrono::milliseconds(second_step + (monoton_delay*1000)));
+
+        if(monoton_delay != 0){
+            this_thread::sleep_for(std::chrono::seconds(monoton_delay));
+            monoton_delay = 0;
+        }
     }
 
 }
@@ -29,7 +35,17 @@ long Clock::to_time(){
 }
 
 void Clock::from_time(long time){
-    curr_time = chrono::system_clock::from_time_t(time);
+    if(monoton){
+        if(time < to_time()){
+            cout << "mon_del_set" << endl;
+            monoton_delay = (time - to_time()) * -1;
+            cout << monoton_delay << endl;
+        }else{
+            curr_time = chrono::system_clock::from_time_t(time);
+        }
+    }else{
+        curr_time = chrono::system_clock::from_time_t(time);
+    }
 }
 
 void Clock::debug_out(){

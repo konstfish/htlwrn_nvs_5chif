@@ -13,6 +13,9 @@ class Clock{
 
     int second_step;
 
+    bool monoton{false};
+    int monoton_delay{0};
+
     public:
     Clock(){};
 
@@ -39,6 +42,10 @@ class Clock{
 
     long to_time();
     void from_time(long time);
+
+    void set_time_monoton(bool toggle){
+        monoton = toggle;
+    }
 
     void debug_out();
 };
