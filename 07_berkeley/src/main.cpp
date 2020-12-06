@@ -56,6 +56,9 @@ class TimeMaster{
     std::string name;
     Clock c;
 
+    Channel *slave_chan1;
+    Channel *slave_chan2;
+
     public:
 
     TimeMaster(std::string rn, int hours, int minutes, int seconds):name( rn ){
@@ -67,6 +70,14 @@ class TimeMaster{
 
         clock.join();
     };
+
+    void set_channel1(Channel* sc1){
+        slave_chan1 = sc1;
+    }
+
+    void set_channel2(Channel* sc2){
+        slave_chan2 = sc2;
+    }
 };
 
 int main() {
