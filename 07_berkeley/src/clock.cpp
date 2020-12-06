@@ -37,9 +37,7 @@ long Clock::to_time(){
 void Clock::from_time(long time){
     if(monoton){
         if(time < to_time()){
-            cout << "mon_del_set" << endl;
             monoton_delay = (time - to_time()) * -1;
-            cout << monoton_delay << endl;
         }else{
             curr_time = chrono::system_clock::from_time_t(time);
         }

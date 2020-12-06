@@ -6,6 +6,8 @@
 
 #include "pipe.h"
 
+#include "CLI11.hpp"
+
 using namespace std;
 
 class Channel{
@@ -41,9 +43,9 @@ class TimeSlave{
 
     public:
 
-    TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency, int second_step):name( rn ){
+    TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency, int second_step, bool monotone):name( rn ){
         c = Clock(name, hours, minutes, seconds, second_step);
-        c.set_time_monoton(true);
+        c.set_time_monoton(monotone);
 
         (*chan).set_latency(latency);
     };
@@ -86,9 +88,9 @@ class TimeMaster{
 
     public:
 
-    TimeMaster(std::string rn, int hours, int minutes, int seconds, int second_step):name( rn ){
+    TimeMaster(std::string rn, int hours, int minutes, int seconds, int second_step, bool monotone):name( rn ){
         c = Clock(name, hours, minutes, seconds, second_step);
-        c.set_time_monoton(true);
+        c.set_time_monoton(monotone);
     };
 
     void operator()(){
@@ -165,12 +167,39 @@ class TimeMaster{
     }
 };
 
-int main() {
+int main(int argc, char** argv) {
+    CLI::App app("Simulate the berkeley-algo");
 
-    TimeSlave slave1("slave1", 1, 2, 50, 1, 980);
-    TimeSlave slave2("slave2", 1, 4, 25, 2, 1200);
+    bool monoton{false};
 
-    TimeMaster master1("master1", 1, 3, 0, 1000);
+    uint latency1{0};
+    uint latency2{0};
+
+    int deviation1{1000};
+    int deviation2{1000};
+    int deviationm{1000};
+
+    app.add_flag("-m, --monotone", monoton, "set monotone mode");
+
+    app.add_option("--latency1", latency1, "latency to channel 1 (both directions)");
+    app.add_option("--latency2", latency2, "latency to channel 1 (both directions)");
+
+    app.add_option("--deviation1", deviation1, "deviation of clock of slave 1 (specify using 1000 = 1s)");
+    app.add_option("--deviation2", deviation2, "deviation of clock of slave 2 (specify using 1000 = 1s)");
+    app.add_option("--deviationm", deviationm, "deviation of clock of master (specify using 1000 = 1s)");
+    
+
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) { 
+        return app.exit(e);
+    }
+
+
+    TimeSlave slave1("slave1", 1, 2, 50, latency1, deviation1, monoton);
+    TimeSlave slave2("slave2", 1, 3, 25, latency2, deviation2, monoton);
+
+    TimeMaster master1("master1", 1, 3, 0, deviationm, monoton);
 
     master1.set_channel1(slave1.get_channel());
     master1.set_channel2(slave2.get_channel());
