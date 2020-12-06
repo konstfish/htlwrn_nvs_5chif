@@ -1,7 +1,5 @@
 #include "clock.h"
 
-#include "timeutils.h"
-
 using namespace std;
 
 void Clock::operator()(){
