@@ -7,11 +7,31 @@
 
 using namespace std;
 
+class Channel{
+    private:
+    Pipe<long> p1;
+    Pipe<long> p2;
+
+    public:
+
+    Channel(){};
+
+    Pipe<long>& get_pipe1(){
+        return p1;
+    }
+
+    Pipe<long>& get_pipe2(){
+        return p2;
+    }
+
+};
+
 class TimeSlave{
     private:
 
     std::string name;
     Clock c;
+    Channel *chan = new Channel();
 
     public:
 
@@ -24,6 +44,10 @@ class TimeSlave{
 
         clock.join();
     };
+
+    Channel* get_channel(){
+        return chan;
+    }
 };
 
 class TimeMaster{
@@ -43,25 +67,6 @@ class TimeMaster{
 
         clock.join();
     };
-};
-
-class Channel{
-    private:
-    Pipe<long> p1;
-    Pipe<long> p2;
-
-    public:
-
-    Channel(){};
-
-    Pipe<long>& get_pipe1(){
-        return p1;
-    }
-
-    Pipe<long>& get_pipe2(){
-        return p2;
-    }
-
 };
 
 int main() {
