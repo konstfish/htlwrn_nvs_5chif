@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <sstream>
 
 #include "clock.h"
 
@@ -40,13 +41,23 @@ class TimeSlave{
     };
 
     void operator()(){
-        thread clock{c};
+        thread clock{ref(c)};
 
         long value;
+        long diff;
 
-        for(int i = 0; i < 3; i++){
+        while(true){
             (*chan).get_pipe1() >> value;
-            cout << value << endl;
+
+            diff = c.to_time() - value;
+
+            (*chan).get_pipe2() << diff;
+
+            (*chan).get_pipe1() >> value;
+
+            value += c.to_time();
+
+            c.from_time(value);
         }
         clock.join();
     };
@@ -72,17 +83,66 @@ class TimeMaster{
     };
 
     void operator()(){
-        thread clock{c};
+        thread clock{ref(c)};
 
-        for(int i = 0; i < 3; i++){
-            (*slave_chan1).get_pipe1() << 1;
-            (*slave_chan2).get_pipe1()  << 2;
+        Pipe<long> &in_s1 = (*slave_chan1).get_pipe1();
+        Pipe<long> &out_s1 = (*slave_chan1).get_pipe2();
 
-            this_thread::sleep_for(500ms);
+        Pipe<long> &in_s2 = (*slave_chan2).get_pipe1();
+        Pipe<long> &out_s2 = (*slave_chan2).get_pipe2();
+
+        long s1_diff;
+        long s2_diff;
+
+        long s1_avg;
+        long s2_avg;
+
+        long m_avg;
+
+        ostringstream buf;
+
+        while(true){
+            // step 1 send time
+
+            cout << "Starting Berkely Alg\n";
+
+            m_avg = c.to_time();
+
+            in_s1 << m_avg;
+            in_s2 << m_avg;
+
+            // step 2 get diffs
+
+            out_s1 >> s1_diff;
+            out_s2 >> s2_diff;
+
+            // step 3 avg times
+
+            m_avg = (s1_diff + s2_diff) / 3;
+            s1_avg = m_avg - s1_diff;
+            s2_avg = m_avg - s2_diff;
+
+
+            buf << "Calculated Diffs:\nMaster: " << m_avg << "\nSlave1: " << s1_avg << "\nSlave2: " << s1_avg << endl; 
+            cout << buf.str();
+            buf.str("");
+
+            m_avg += c.to_time();
+
+            c.from_time(m_avg);
+
+            in_s1 << s1_avg;
+            in_s2 << s2_avg;
+
+            cout << "Updated Clocks.\n";
+
+            this_thread::sleep_for(10s);
         }
 
-        (*slave_chan1).get_pipe1().close();
-        (*slave_chan2).get_pipe1().close();
+        in_s1.close();
+        out_s1.close();
+        in_s2.close();
+        out_s2.close();
 
         clock.join();
     };
@@ -98,10 +158,10 @@ class TimeMaster{
 
 int main() {
 
-    TimeSlave slave1("slave1", 1, 1, 1);
-    TimeSlave slave2("slave2", 1, 1, 1);
+    TimeSlave slave1("slave1", 1, 2, 50);
+    TimeSlave slave2("slave2", 1, 3, 29);
 
-    TimeMaster master1("master1", 1, 1, 1);
+    TimeMaster master1("master1", 1, 3, 0);
 
     master1.set_channel1(slave1.get_channel());
     master1.set_channel2(slave2.get_channel());
