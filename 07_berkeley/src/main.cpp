@@ -25,6 +25,11 @@ class Channel{
         return p2;
     }
 
+    void set_latency(long lat){
+        p1.set_latency(lat);
+        p2.set_latency(lat);
+    }
+
 };
 
 class TimeSlave{
@@ -36,8 +41,10 @@ class TimeSlave{
 
     public:
 
-    TimeSlave(std::string rn, int hours, int minutes, int seconds):name( rn ){
+    TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency):name( rn ){
         c = Clock(name, hours, minutes, seconds);
+
+        (*chan).set_latency(latency);
     };
 
     void operator()(){
@@ -158,8 +165,8 @@ class TimeMaster{
 
 int main() {
 
-    TimeSlave slave1("slave1", 1, 2, 50);
-    TimeSlave slave2("slave2", 1, 3, 29);
+    TimeSlave slave1("slave1", 1, 2, 50, 1);
+    TimeSlave slave2("slave2", 1, 3, 25, 2);
 
     TimeMaster master1("master1", 1, 3, 0);
 
