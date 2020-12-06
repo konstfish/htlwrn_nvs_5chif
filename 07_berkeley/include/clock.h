@@ -2,16 +2,20 @@
 
 #include <iostream>
 #include <chrono>
+#include <thread>
 
+#include "timeutils.h"
 class Clock{
     private:
     std::string name;
-    std::chrono::system_clock::time_point sys_clock;
+    std::chrono::time_point<std::chrono::system_clock> curr_time;
 
     public:
     Clock(std::string n){
         name = n;
-        sys_clock = std::chrono::system_clock::now();
+        curr_time = std::chrono::system_clock::now();
     }
+
+    void operator()();
 
 };
