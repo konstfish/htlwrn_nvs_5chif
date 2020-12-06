@@ -18,17 +18,18 @@ class TimeSlave{
     };
 
     void operator()(){
+        thread clock{c};
 
+        clock.join();
     };
 };
 
 int main() {
-    thread clock{Clock("testclock")};
+    thread s1{TimeSlave("slave1", 1, 1, 1)};
+    thread s2{TimeSlave("slave2", 1, 1, 1)};
 
-    thread clock2{Clock("testclock2", 1, 1, 1)};
-
-    clock.join();
-    clock2.join();
+    s1.join();
+    s2.join();
 
     return 0;
 }
