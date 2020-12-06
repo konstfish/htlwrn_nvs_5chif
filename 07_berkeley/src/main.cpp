@@ -42,6 +42,12 @@ class TimeSlave{
     void operator()(){
         thread clock{c};
 
+        long value;
+
+        for(int i = 0; i < 3; i++){
+            (*chan).get_pipe1() >> value;
+            cout << value << endl;
+        }
         clock.join();
     };
 
@@ -68,6 +74,16 @@ class TimeMaster{
     void operator()(){
         thread clock{c};
 
+        for(int i = 0; i < 3; i++){
+            (*slave_chan1).get_pipe1() << 1;
+            (*slave_chan2).get_pipe1()  << 2;
+
+            this_thread::sleep_for(500ms);
+        }
+
+        (*slave_chan1).get_pipe1().close();
+        (*slave_chan2).get_pipe1().close();
+
         clock.join();
     };
 
@@ -81,15 +97,24 @@ class TimeMaster{
 };
 
 int main() {
-    thread s1{TimeSlave("slave1", 1, 1, 1)};
-    thread s2{TimeSlave("slave2", 1, 1, 1)};
 
-    thread m1{TimeMaster("master1", 1, 1, 1)};
+    TimeSlave slave1("slave1", 1, 1, 1);
+    TimeSlave slave2("slave2", 1, 1, 1);
 
-    s1.join();
-    s2.join();
+    TimeMaster master1("master1", 1, 1, 1);
 
-    m1.join();
+    master1.set_channel1(slave1.get_channel());
+    master1.set_channel2(slave2.get_channel());
+
+    thread ts1{slave1};
+    thread ts2{slave2};
+
+    thread tm1{master1};
+
+    ts1.join();
+    ts2.join();
+
+    tm1.join();
 
     return 0;
 }
