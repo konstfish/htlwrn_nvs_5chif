@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <sstream>
 
 #include "timeutils.h"
 class Clock{
@@ -11,8 +12,8 @@ class Clock{
     std::chrono::time_point<std::chrono::system_clock> curr_time;
 
     public:
-    Clock(std::string n){
-        name = n;
+    Clock(std::string name_){
+        name = name_;
         curr_time = std::chrono::system_clock::now();
     }
 
@@ -22,5 +23,4 @@ class Clock{
     }
 
     void operator()();
-
 };

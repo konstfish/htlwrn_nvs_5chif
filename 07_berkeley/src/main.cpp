@@ -13,6 +13,5 @@ int main() {
     clock.join();
     clock2.join();
 
-
     return 0;
 }
