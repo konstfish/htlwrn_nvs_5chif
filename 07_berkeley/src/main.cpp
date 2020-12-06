@@ -3,6 +3,8 @@
 
 #include "clock.h"
 
+#include "pipe.h"
+
 using namespace std;
 
 class TimeSlave{
