@@ -45,6 +45,25 @@ class TimeMaster{
     };
 };
 
+class Channel{
+    private:
+    Pipe<long> p1;
+    Pipe<long> p2;
+
+    public:
+
+    Channel(){};
+
+    Pipe<long>& get_pipe1(){
+        return p1;
+    }
+
+    Pipe<long>& get_pipe2(){
+        return p2;
+    }
+
+};
+
 int main() {
     thread s1{TimeSlave("slave1", 1, 1, 1)};
     thread s2{TimeSlave("slave2", 1, 1, 1)};

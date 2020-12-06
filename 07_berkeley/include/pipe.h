@@ -14,8 +14,8 @@ class Pipe {
   public:
     Pipe& operator<<(T value) {
         // here we go!
-        unique_lock<mutex> ul{mtx};
-        not_empty.wait(ul, [this](){return !closed});
+        std::unique_lock<std::mutex> ul{mtx};
+        not_empty.wait(ul, [this](){return !closed;});
 
         backend.push(value);
 
@@ -26,7 +26,7 @@ class Pipe {
     
     Pipe& operator>>(T& value) {
         // here we go!
-        unique_lock<mutex> ul{mtx};
+        std::unique_lock<std::mutex> ul{mtx};
         not_empty.wait(ul, [this](){return (backend.size() > 0);});
 
         value = backend.front();
