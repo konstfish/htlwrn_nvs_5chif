@@ -11,6 +11,8 @@ class Clock{
     std::string name;
     std::chrono::time_point<std::chrono::system_clock> curr_time;
 
+    int second_step;
+
     public:
     Clock(){};
 
@@ -22,6 +24,12 @@ class Clock{
     Clock(std::string name_, int hours_, int minutes_, int seconds_){
         curr_time = ::set_time(curr_time, hours_, minutes_, seconds_);
         name = name_;
+    }
+
+    Clock(std::string name_, int hours_, int minutes_, int seconds_, int step){
+        curr_time = ::set_time(curr_time, hours_, minutes_, seconds_);
+        name = name_;
+        second_step = step;
     }
 
     void operator()();

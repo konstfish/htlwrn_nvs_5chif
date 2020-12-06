@@ -41,8 +41,8 @@ class TimeSlave{
 
     public:
 
-    TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency):name( rn ){
-        c = Clock(name, hours, minutes, seconds);
+    TimeSlave(std::string rn, int hours, int minutes, int seconds, long latency, int second_step):name( rn ){
+        c = Clock(name, hours, minutes, seconds, second_step);
 
         (*chan).set_latency(latency);
     };
@@ -85,8 +85,8 @@ class TimeMaster{
 
     public:
 
-    TimeMaster(std::string rn, int hours, int minutes, int seconds):name( rn ){
-        c = Clock(name, hours, minutes, seconds);
+    TimeMaster(std::string rn, int hours, int minutes, int seconds, int second_step):name( rn ){
+        c = Clock(name, hours, minutes, seconds, second_step);
     };
 
     void operator()(){
@@ -165,10 +165,10 @@ class TimeMaster{
 
 int main() {
 
-    TimeSlave slave1("slave1", 1, 2, 50, 1);
-    TimeSlave slave2("slave2", 1, 3, 25, 2);
+    TimeSlave slave1("slave1", 1, 2, 50, 1, 980);
+    TimeSlave slave2("slave2", 1, 3, 25, 2, 1200);
 
-    TimeMaster master1("master1", 1, 3, 0);
+    TimeMaster master1("master1", 1, 3, 0, 1000);
 
     master1.set_channel1(slave1.get_channel());
     master1.set_channel2(slave2.get_channel());

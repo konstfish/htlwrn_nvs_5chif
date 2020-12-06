@@ -11,7 +11,7 @@ void Clock::operator()(){
         buf.str("");
 
         curr_time += std::chrono::seconds(1);
-        this_thread::sleep_for(1s);
+        this_thread::sleep_for(std::chrono::milliseconds(second_step));
     }
 
 }
