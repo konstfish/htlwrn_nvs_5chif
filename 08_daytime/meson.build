@@ -16,8 +16,19 @@ inc_dir = include_directories(['include',
 
 src_client = ['src/daytime_client/main.cpp']
 
-executable('daytime_client',
+src_server = ['src/daytime_server/main.cpp']
+
+
+executable('client',
             sources : src_client,
+            include_directories : inc_dir,
+            #dependencies : XXX_dep,
+            #link_with : XXX_lib
+           )
+
+
+executable('server',
+            sources : src_server,
             include_directories : inc_dir,
             #dependencies : XXX_dep,
             #link_with : XXX_lib
