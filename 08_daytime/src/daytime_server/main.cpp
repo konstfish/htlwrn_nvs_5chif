@@ -37,26 +37,27 @@ int main(int argc, char** argv) {
     spdlog::get("console")->info("Starting server on port {}.", port);
 
     asio::io_context ctx;
-
     tcp::endpoint ep{tcp::v4(), port}; 
     tcp::acceptor acceptor{ctx, ep};
     tcp::socket sock{ctx};
-    //acceptor.accept(sock);
-    //tcp::iostream strm{std::move(sock)};
 
-    while(true){
+    while(true) {
         spdlog::get("console")->info("Waiting for connection");
 
-        acceptor.accept(sock);
-        tcp::iostream strm{std::move(sock)};
+        try {
+            acceptor.accept(sock);
+            tcp::iostream strm{std::move(sock)};
 
-        spdlog::get("console")->info("Connection established");
+            spdlog::get("console")->info("Connection established");
 
-        auto t = std::time(nullptr);
-        auto tm = *std::localtime(&t);
+            auto t = std::time(nullptr);
+            auto tm = *std::localtime(&t);
 
-        strm << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
-        strm.close();
+            strm << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+            strm.close();
+        } catch(exception e) {
+            spdlog::get("console")->error("Unable to send data to client!");
+        }
 
         spdlog::get("console")->info("Connection finished processing");
     }

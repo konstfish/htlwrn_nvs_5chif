@@ -47,10 +47,14 @@ int main(int argc, char** argv) {
 
 
     if(strm) {
-        string data;
-        getline(strm, data);
-        cout << data << endl;
-        strm.close();
+        try {
+            string data;
+            getline(strm, data);
+            cout << data << endl;
+            strm.close();
+        } catch(exception e) {
+            spdlog::get("console")->error("Unable to recieve data from server!");
+        }
     } else { 
         spdlog::get("console")->error("Could not connect to server!");
     }
