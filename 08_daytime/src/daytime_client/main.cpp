@@ -11,18 +11,26 @@ using namespace asio::ip;
 using namespace std;
 
 int main(int argc, char** argv) {
+    auto console = spdlog::stdout_color_mt("console");
+
+    spdlog::get("console")->info("Starting Daytime Client!");
+
     CLI::App app("Daytime Client");
 
     string port{"1113"};
 
-    app.add_option("port", port, "port to connect to") -> required();
+    app.add_option("port", port, "port to connect to");
 
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e) { 
+        spdlog::get("console")->error("Error while Parsing CLI Arguments");
+
         return app.exit(e);
     }
-    auto console = spdlog::stdout_color_mt("console");
+
+    spdlog::get("console")->info("CLI Arguments sucessfully parsed");
+
     
     /*
     asio::io_context io;
@@ -35,13 +43,16 @@ int main(int argc, char** argv) {
 
     tcp::iostream strm{"localhost", port};
 
+    spdlog::get("console")->info("Attempting to connect to server on port {}.", port);
+
+
     if(strm) {
         string data;
         getline(strm, data);
         cout << data << endl;
         strm.close();
     } else { 
-        cout << "Could not connect to server!" << endl;
+        spdlog::get("console")->error("Could not connect to server!");
     }
 
     return 0;
