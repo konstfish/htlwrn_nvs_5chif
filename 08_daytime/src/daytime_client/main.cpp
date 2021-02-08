@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
         cout << data << endl;
         strm.close();
     } else { 
-        cout << "no connection" << endl; 
+        cout << "Could not connect to server!" << endl;
     }
 
     return 0;
