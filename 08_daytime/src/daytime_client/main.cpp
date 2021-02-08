@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
         return app.exit(e);
     }
 
-    spdlog::get("console")->info("CLI Arguments sucessfully parsed");
+    spdlog::get("console")->info("CLI Arguments successfully parsed");
 
     
     /*

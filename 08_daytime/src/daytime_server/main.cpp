@@ -32,23 +32,33 @@ int main(int argc, char** argv) {
         return app.exit(e);
     }
 
-    spdlog::get("console")->info("CLI Arguments sucessfully parsed");
+    spdlog::get("console")->info("CLI Arguments successfully parsed");
 
     spdlog::get("console")->info("Starting server on port {}.", port);
 
     asio::io_context ctx;
     tcp::endpoint ep{tcp::v4(), 1113}; 
-    tcp::acceptor acceptor{ctx, ep}; // IO object acceptor.listen();
+    tcp::acceptor acceptor{ctx, ep};
     tcp::socket sock{ctx};
-    acceptor.accept(sock);
-    tcp::iostream strm{std::move(sock)};
-    //shorter: tcp::iostream strm{acceptor.accept()};
+    //acceptor.accept(sock);
+    //tcp::iostream strm{std::move(sock)};
 
-    auto t = std::time(nullptr);
-    auto tm = *std::localtime(&t);
+    while(true){
+        spdlog::get("console")->info("Waiting for connection");
 
-    strm << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
-    strm.close();
+        acceptor.accept(sock);
+        tcp::iostream strm{std::move(sock)};
+
+        spdlog::get("console")->info("Connection established");
+
+        auto t = std::time(nullptr);
+        auto tm = *std::localtime(&t);
+
+        strm << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+        strm.close();
+
+        spdlog::get("console")->info("Connection finished processing");
+    }
 
     return 0;
 }
