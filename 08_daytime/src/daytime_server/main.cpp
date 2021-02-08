@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 
     CLI::App app("Daytime Server");
 
-    int port{1113};
+    unsigned short port{1113};
 
     app.add_option("port", port, "server port");
 
@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
     spdlog::get("console")->info("Starting server on port {}.", port);
 
     asio::io_context ctx;
-    tcp::endpoint ep{tcp::v4(), 1113}; 
+
+    tcp::endpoint ep{tcp::v4(), port}; 
     tcp::acceptor acceptor{ctx, ep};
     tcp::socket sock{ctx};
     //acceptor.accept(sock);
